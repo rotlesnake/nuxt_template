@@ -1,0 +1,22 @@
+{
+  "name": "nuxt_app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@mdi/font": "^5.5.55",
+    "@nuxtjs/axios": "^5.12.0",
+    "material-design-icons-iconfont": "^6.0.1",
+    "nuxt": "^2.14.0",
+    "vue-page-transition": "^0.2.2"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.11.2"
+  }
+}
