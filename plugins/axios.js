@@ -1,7 +1,6 @@
 export default async ({ $axios, store, env, redirect }) => {
 
     $axios.onRequest((request) => {
-        //console.log("request",request);
         request.headers.common['Content-Type'] = "application/json";
 
         if (store.state.auth.token) {

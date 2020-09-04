@@ -66,8 +66,8 @@ export default {
   },
 
   route:{
-     //base: "",
-     //middleware: ['auth']
+     //base: "/www/",
+     middleware: ['auth'],
   },
 
   /*

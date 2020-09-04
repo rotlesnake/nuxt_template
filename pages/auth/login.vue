@@ -32,6 +32,8 @@
 
 <script>
 export default {
+	meta:{ auth: false },
+
 	layout: "empty",
 	
 	components:{
