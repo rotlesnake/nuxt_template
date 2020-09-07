@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV_MODE=dev nuxt",
+    "dev": "NODE_ENV_MODE=dev  nuxt",
     "build": "NODE_ENV_MODE=prod nuxt build",
     "start": "NODE_ENV_MODE=prod nuxt start",
     "generate": "NODE_ENV_MODE=prod nuxt generate"
@@ -15,9 +15,12 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "material-design-icons-iconfont": "^6.0.1",
     "nuxt": "^2.14.0",
+    "nuxt-i18n": "^6.13.12",
+    "vue-i18n": "^8.21.0",
     "vue-page-transition": "^0.2.2"
   },
   "devDependencies": {
+    "@nuxtjs/moment": "^1.6.1",
     "@nuxtjs/vuetify": "^1.11.2"
   }
 }

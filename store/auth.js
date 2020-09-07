@@ -24,6 +24,7 @@ export const mutations = {
 
 // actions
 export const actions = {
+
   async login({ commit }, data) {
     try {
       const result = await this.$api("api", "auth", "login", data);
@@ -50,4 +51,5 @@ export const actions = {
       throw e;
     }
   }
+
 }; //actions

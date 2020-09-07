@@ -8,8 +8,8 @@ export default {
   target: 'server',
 
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    titleTemplate: '%s - ' + process.env.appName,
+    title: process.env.appName || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -27,6 +27,7 @@ export default {
     "@/plugins/vuetify.js",
     "@/plugins/api.js",
     "@/plugins/axios.js",
+    "@/plugins/i18n.js",
   ],
 
   components: true,
@@ -44,6 +45,12 @@ export default {
       retry: { retries: 3 },
       baseURL: process.env.backendURL,
   },
+
+  moment: {
+    defaultLocale: 'ru',
+    locales: ['ru', 'en-ca']
+  },
+
 
   router:{
       base: process.env.routeURL,

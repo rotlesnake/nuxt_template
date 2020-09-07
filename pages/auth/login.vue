@@ -6,7 +6,7 @@
 
     <v-card max-width="500" class="ma-auto">
         <v-toolbar color="primary" dark flat>
-            <v-toolbar-title>Вход в систему</v-toolbar-title>
+            <v-toolbar-title>{{$t('auth.login')}}</v-toolbar-title>
             <v-spacer></v-spacer>
         </v-toolbar>
 
@@ -40,6 +40,12 @@ export default {
 		"LoginLogotip":()=>import('@/components/auth/LoginLogo.vue')
 	},
 
+    head() {
+      return {
+        title: "Авторизация"
+      };
+    },
+
     data() {
         return {
             message: "",
@@ -53,7 +59,8 @@ export default {
     mounted(){
         console.log(process.env.routeURL);
         console.log(process.env.backendURL);
-
+        console.log(this.$t('auth'));
+        setTimeout(()=>{this.$i18n.locale = 'en';},1900)
     },
 
     methods: {

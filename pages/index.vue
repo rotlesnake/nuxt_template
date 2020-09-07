@@ -57,5 +57,10 @@ export default {
         Logo,
         VuetifyLogo,
     },
+    head() {
+      return {
+        title: "Home page"
+      };
+    },
 };
 </script>

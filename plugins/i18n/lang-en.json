@@ -1,0 +1,11 @@
+{
+    "auth":{
+        "login": "Authorization"
+    },
+
+    "message": {
+      "homeAddress": "Home address",
+      "missingHomeAddress": "Please provide @.lower:message.homeAddress"
+    }
+
+}
