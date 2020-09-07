@@ -59,12 +59,22 @@ export default {
     mounted(){
         console.log(process.env.routeURL);
         console.log(process.env.backendURL);
-        console.log(this.$t('auth'));
         setTimeout(()=>{this.$i18n.locale = 'en';},1900)
     },
 
     methods: {
         doLogin1() {
+this.$swal.fire({
+  title: 'Sweet!',
+  text: 'Modal with a custom image.',
+  imageUrl: 'https://unsplash.it/400/200',
+  imageWidth: 400,
+  imageHeight: 200,
+  imageAlt: 'Custom image',
+  showConfirmButton: false,
+  timer: 1500,
+})
+
             this.$store.dispatch("auth/login", this.auth).then(result => {
                 console.log("result", result);
             }).catch(e => {

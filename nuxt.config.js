@@ -32,13 +32,14 @@ export default {
 
   components: true,
 
+
   buildModules: [
       ['@nuxtjs/dotenv', { filename: process.env.NODE_ENV_MODE === 'dev' ? '.env.development' : '.env.production' }],
       '@nuxtjs/vuetify',
   ],
-
   modules: [
       '@nuxtjs/axios',
+      'nuxt-sweetalert2',
   ],
 
   axios: {
