@@ -1,20 +1,12 @@
 import colors from 'vuetify/es5/util/colors'
+require('dotenv').config({ path: process.env.NODE_ENV_MODE === 'dev' ? '.env.development' : '.env.production' });
 
 export default {
-  /*
-  ** Nuxt rendering mode
-  ** See https://nuxtjs.org/api/configuration-mode
-  */
+  loading: { color: '#fff' },
+
   mode: 'spa',
-  /*
-  ** Nuxt target
-  ** See https://nuxtjs.org/api/configuration-target
-  */
   target: 'server',
-  /*
-  ** Headers of the page
-  ** See https://nuxtjs.org/api/configuration-head
-  */
+
   head: {
     titleTemplate: '%s - ' + process.env.npm_package_name,
     title: process.env.npm_package_name || '',
@@ -27,48 +19,38 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-  /*
-  ** Global CSS
-  */
+
   css: [
   ],
-  /*
-  ** Plugins to load before mounting the App
-  ** https://nuxtjs.org/guide/plugins
-  */
+
   plugins: [
     "@/plugins/vuetify.js",
     "@/plugins/api.js",
     "@/plugins/axios.js",
   ],
-  /*
-  ** Auto import components
-  ** See https://nuxtjs.org/api/configuration-components
-  */
+
   components: true,
-  /*
-  ** Nuxt.js dev-modules
-  */
+
   buildModules: [
-    '@nuxtjs/vuetify',
+      ['@nuxtjs/dotenv', { filename: process.env.NODE_ENV_MODE === 'dev' ? '.env.development' : '.env.production' }],
+      '@nuxtjs/vuetify',
   ],
-  /*
-  ** Nuxt.js modules
-  */
+
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
+      '@nuxtjs/axios',
   ],
 
   axios: {
       retry: { retries: 3 },
-      baseURL: 'http://127.0.0.1/nuxt_app/'
+      baseURL: process.env.backendURL,
   },
 
-  route:{
-     //base: "/www/",
-     middleware: ['auth'],
+  router:{
+      base: process.env.routeURL,
+      middleware: ['auth'],
   },
+
+
 
   /*
   ** Build configuration

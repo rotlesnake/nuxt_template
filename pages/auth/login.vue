@@ -50,6 +50,11 @@ export default {
             }
         };
     },
+    mounted(){
+        console.log(process.env.routeURL);
+        console.log(process.env.backendURL);
+
+    },
 
     methods: {
         doLogin1() {
