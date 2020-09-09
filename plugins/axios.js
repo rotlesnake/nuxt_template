@@ -1,4 +1,4 @@
-export default async ({ $axios, store, env, redirect }) => {
+export default async ({ $axios, store, env, redirect, app }) => {
 
     $axios.onRequest((request) => {
         request.headers.common['Content-Type'] = "application/json";
@@ -11,8 +11,18 @@ export default async ({ $axios, store, env, redirect }) => {
         return request;
     });
 
+
+
     $axios.onResponse((response) => {
+
         if (store.state.dev.isDev===true && response.status > 200) {
+            app.$swal({
+              title: 'Ошибка',
+              text: response.data ,
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500,
+            });
             console.warn(response);
             store.commit("dev/ADD_ERROR", response);
         }
@@ -24,8 +34,18 @@ export default async ({ $axios, store, env, redirect }) => {
         return response;
     });
 
+
+
     $axios.onError(error => {
+
         if (store.state.dev.isDev===true) {
+            app.$swal({
+              title: 'Ошибка',
+              text: error,
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500,
+            });
             console.error(error);
             store.commit("dev/ADD_ERROR", error);
         }

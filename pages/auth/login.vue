@@ -65,19 +65,9 @@ export default {
 
     methods: {
         doLogin1() {
-this.$swal.fire({
-  title: 'Sweet!',
-  text: 'Modal with a custom image.',
-  imageUrl: 'https://unsplash.it/400/200',
-  imageWidth: 400,
-  imageHeight: 200,
-  imageAlt: 'Custom image',
-  showConfirmButton: false,
-  timer: 1500,
-})
 
             this.$store.dispatch("auth/login", this.auth).then(result => {
-                console.log("result", result);
+                //console.log("result", result);
             }).catch(e => {
                 this.message = e.message;
             });

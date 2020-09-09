@@ -40,7 +40,7 @@ export default {
   ],
   modules: [
       '@nuxtjs/axios',
-      'nuxt-sweetalert2',
+      'vue-sweetalert2/nuxt',
   ],
 
   axios: {

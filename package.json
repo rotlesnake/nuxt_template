@@ -15,10 +15,10 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "material-design-icons-iconfont": "^6.0.1",
     "nuxt": "^2.14.0",
-    "nuxt-i18n": "^6.13.12",
-    "nuxt-sweetalert2": "^1.0.0",
+    "sweetalert2": "^10.0.2",
     "vue-i18n": "^8.21.0",
-    "vue-page-transition": "^0.2.2"
+    "vue-page-transition": "^0.2.2",
+    "vue-sweetalert2": "^3.0.8"
   },
   "devDependencies": {
     "@nuxtjs/moment": "^1.6.1",
