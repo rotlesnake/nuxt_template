@@ -59,7 +59,8 @@ export default {
     mounted(){
         console.log(process.env.routeURL);
         console.log(process.env.backendURL);
-        setTimeout(()=>{this.$i18n.locale = 'en';},1900)
+        console.log(process.env.NODE_ENV);
+        setTimeout(()=>{this.$i18n.locale = 'en';},3500)
     },
 
     methods: {

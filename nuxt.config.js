@@ -1,5 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
-require('dotenv').config({ path: process.env.NODE_ENV_MODE === 'dev' ? '.env.development' : '.env.production' });
+require('dotenv').config({ path: process.env.NODE_ENV === 'development' ? '.env.development' : '.env.production' });
 
 export default {
   loading: { color: '#fff' },
@@ -34,8 +34,9 @@ export default {
 
 
   buildModules: [
-      ['@nuxtjs/dotenv', { filename: process.env.NODE_ENV_MODE === 'dev' ? '.env.development' : '.env.production' }],
+      ['@nuxtjs/dotenv', { filename: process.env.NODE_ENV === 'development' ? '.env.development' : '.env.production' }],
       '@nuxtjs/vuetify',
+      '@nuxtjs/moment',
   ],
   modules: [
       '@nuxtjs/axios',

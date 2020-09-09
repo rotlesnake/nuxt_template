@@ -13,9 +13,14 @@ export default async ({ $axios, store, env, redirect }) => {
 
     $axios.onResponse((response) => {
         if (store.state.dev.isDev===true && response.status > 200) {
-           console.warn(response);
-           store.commit("dev/ADD_ERROR", response);
+            console.warn(response);
+            store.commit("dev/ADD_ERROR", response);
         }
+
+        if (response.status == 401) {
+            redirect('/auth/login')
+        }
+
         return response;
     });
 
