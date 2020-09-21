@@ -17,8 +17,7 @@
     "nuxt": "^2.14.0",
     "sweetalert2": "^10.0.2",
     "vue-i18n": "^8.21.0",
-    "vue-page-transition": "^0.2.2",
-    "vue-sweetalert2": "^3.0.8"
+    "vue-page-transition": "^0.2.2"
   },
   "devDependencies": {
     "@nuxtjs/moment": "^1.6.1",

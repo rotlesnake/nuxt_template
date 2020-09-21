@@ -26,6 +26,7 @@ export default {
   plugins: [
     "@/plugins/vuetify.js",
     "@/plugins/api.js",
+    "@/plugins/swal.js",
     "@/plugins/axios.js",
     "@/plugins/i18n.js",
   ],
@@ -40,7 +41,6 @@ export default {
   ],
   modules: [
       '@nuxtjs/axios',
-      'vue-sweetalert2/nuxt',
   ],
 
   axios: {
@@ -55,7 +55,7 @@ export default {
 
 
   router:{
-      base: process.env.routeURL,
+      base: process.env.frontendURL,
       middleware: ['auth'],
   },
 

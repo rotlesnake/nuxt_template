@@ -27,7 +27,7 @@ export const actions = {
 
   async login({ commit }, data) {
     try {
-      const result = await this.$api("api", "auth", "login", data);
+      const result = await this.$api("auth", "login", "index", data);
       if (result.user) {
         commit("SET_USER", result.user);
         commit("SET_TOKEN", result.user.token);
@@ -43,10 +43,10 @@ export const actions = {
 
   async logout({ commit }) {
     try {
-      await this.$api("api", "auth", "logout");
+      await this.$api("auth", "logout", "index",);
       commit("CLEAR_USER");
       commit("CLEAR_TOKEN");
-      this.$router.push("/auth/logout");
+      this.$router.push("/auth/login");
     } catch (e) {
       throw e;
     }

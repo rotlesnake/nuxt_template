@@ -11,7 +11,7 @@
         </v-toolbar>
 
         <v-card-text class="mt-8">
-            <v-form @keyup.native.enter="doLogin()">
+            <v-form @keyup.native.enter="doLogin1()">
                 <v-text-field required outlined :disabled="isLoading" name="login" label="Фамилия Имя пользователя" v-model="auth.login" prepend-inner-icon="person" type="text"></v-text-field>
                 <v-text-field counter outlined :disabled="isLoading" name="password" label="Пароль" prepend-inner-icon="lock" v-model="auth.password" type="password"></v-text-field>
                 <v-alert dense outlined v-if="message.length > 0" type="error">{{message}}</v-alert>
@@ -31,9 +31,9 @@
 </template>
 
 <script>
+
 export default {
 	meta:{ auth: false },
-
 	layout: "empty",
 	
 	components:{
@@ -57,18 +57,25 @@ export default {
         };
     },
     mounted(){
-        console.log(process.env.routeURL);
-        console.log(process.env.backendURL);
-        console.log(process.env.NODE_ENV);
-        setTimeout(()=>{this.$i18n.locale = 'en';},3500)
+        if (this.$store.state.auth.token) { 
+            this.$store.dispatch("auth/logout");
+        }
+        //this.$swal.loader();
+        //this.$swal.close();
+        //this.$swal.toast();
+        setTimeout(()=>{ this.$i18n.locale = 'en'; },3500)
+        setTimeout(()=>{ this.$i18n.locale = 'ru'; },9000)
     },
 
     methods: {
         doLogin1() {
-
+            this.$swal.loader("Вход в систему");
             this.$store.dispatch("auth/login", this.auth).then(result => {
-                //console.log("result", result);
+                this.$swal.close();
+                this.$swal.toast("Добро пожаловать: "+result.user.login);
+                this.$router.push("/");
             }).catch(e => {
+                this.$swal.close();
                 this.message = e.message;
             });
         },
