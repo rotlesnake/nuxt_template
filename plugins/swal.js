@@ -17,7 +17,7 @@ export default (context, inject) => {
                   showConfirmButton: false,
                   timer: timeout,
                   timerProgressBar: true,
-                  onOpen: (toast) => {
+                  didOpen: (toast) => {
                     toast.addEventListener('mouseenter', Swal.stopTimer)
                     toast.addEventListener('mouseleave', Swal.resumeTimer)
                   }

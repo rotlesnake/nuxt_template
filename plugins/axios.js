@@ -15,7 +15,7 @@ export default async ({ $axios, store, env, redirect, app }) => {
 
     $axios.onResponse((response) => {
 
-        if (store.state.dev.isDev===true && response.status > 200) {
+        if (store.state.dev.isDev===true && response.status > 200 && response.status != 401 ) {
             app.$swal.fire({
               title: 'Ошибка',
               text: response.data ,
@@ -38,7 +38,7 @@ export default async ({ $axios, store, env, redirect, app }) => {
 
     $axios.onError(error => {
 
-        if (store.state.dev.isDev===true) {
+        if (store.state.dev.isDev===true && error.response.status != 401) {
             app.$swal.fire({
               title: 'Ошибка',
               text: error,

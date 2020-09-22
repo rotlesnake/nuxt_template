@@ -41,7 +41,9 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer />
-                <v-btn color="primary" nuxt to="/inspire">Continue</v-btn>
+                <v-btn color="primary" nuxt to="/inspire">go to page</v-btn>
+                <v-btn color="primary" @click="$store.commit('SET_APP_TITLE', 'asd')">set title</v-btn>
+                <v-btn color="primary" @click="showLoader()">show loader</v-btn>
             </v-card-actions>
         </v-card>
     </v-flex>
@@ -61,6 +63,24 @@ export default {
       return {
         title: "Home page"
       };
+    },
+
+    data() {
+        return {
+
+        };
+    },
+    mounted(){
+        this.$store.commit("SET_APP_TITLE", "Главное меню");
+    },  
+    
+    methods: {
+        showLoader(){
+            this.$store.commit("SHOW_LOADER", true);
+            setTimeout(()=>{
+                this.$store.commit("SHOW_LOADER", false);
+            },  3500);
+        },
     },
 };
 </script>

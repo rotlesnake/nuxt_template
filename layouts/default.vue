@@ -1,8 +1,17 @@
 <template>
 <v-app>
-    <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app>
+    <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant || $store.state.screenWidth<800" :mini-variant-width="50" :clipped="clipped" :mobile-breakpoint="600" fixed app>
+
+        <v-list style="padding:0px;" v-if="!clipped" color="toolbar">
+            <v-list-item nuxt link to="/" exact>
+                <v-list-item-content style="padding:7px;">
+                    <v-img :src="require('@/assets/logo.png')" :height="50" :min-width="32" contain></v-img>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
+
         <v-list>
-            <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+            <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" exact nuxt>
                 <v-list-item-action>
                     <v-icon>{{ item.icon }}</v-icon>
                 </v-list-item-action>
@@ -12,28 +21,28 @@
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
+
     <v-app-bar :clipped-left="clipped" fixed app color="toolbar">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-btn icon @click.stop="miniVariant = !miniVariant">
             <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
         </v-btn>
         <v-btn icon @click.stop="clipped = !clipped">
-            <v-icon>fa-home</v-icon>
+            <v-icon>{{clipped?'mdi-minus':'mdi-view-compact-outline'}}</v-icon>
         </v-btn>
-        <v-btn icon @click.stop="fixed = !fixed">
-            <v-icon>mdi-minus</v-icon>
-        </v-btn>
-        <v-toolbar-title v-text="title" />
+        <v-toolbar-title v-text="$store.state.appTitle" />
         <v-spacer />
         <v-btn icon @click.stop="rightDrawer = !rightDrawer">
             <v-icon>mdi-menu</v-icon>
         </v-btn>
     </v-app-bar>
+
     <v-main>
         <v-container>
             <nuxt />
         </v-container>
     </v-main>
+
     <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
         <v-list>
             <v-list-item @click.native="right = !right">
@@ -46,9 +55,20 @@
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
-    <v-footer :absolute="!fixed" app>
+
+    <v-footer app>
         <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
+
+    <!-- ДИАЛОГ ОЖИДАНИЯ ЗАГРУЗКИ !-->
+    <v-dialog v-model="$store.state.loader.visible" persistent width="300" :elevation="22" dark>
+        <v-card class="pa-2">
+            <v-card-text>{{$store.state.loader.text}}
+                <v-progress-linear indeterminate color="white"></v-progress-linear>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
+
 </v-app>
 </template>
 
@@ -57,8 +77,7 @@ export default {
     data() {
         return {
             clipped: false,
-            drawer: false,
-            fixed: false,
+            drawer: true,
             items: [{
                     icon: 'mdi-apps',
                     title: 'Welcome',
@@ -72,9 +91,17 @@ export default {
             ],
             miniVariant: false,
             right: true,
-            rightDrawer: false,
-            title: 'Vuetify.js'
+            rightDrawer: false
         }
-    }
+    },
+
+    mounted() {
+        this.$store.commit("SET_SCREEN_WIDTH", window.innerWidth);
+        window.addEventListener('resize', () => {
+            this.$store.commit("SET_SCREEN_WIDTH", window.innerWidth);
+        });
+    },
+
+
 }
 </script>

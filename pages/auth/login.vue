@@ -57,25 +57,24 @@ export default {
         };
     },
     mounted(){
-        if (this.$store.state.auth.token) { 
-            this.$store.dispatch("auth/logout");
-        }
-        //this.$swal.loader();
+        this.$store.dispatch("auth/logout");
+        //this.$swal.loader('text');
         //this.$swal.close();
-        //this.$swal.toast();
+        //this.$swal.toast('text');
         setTimeout(()=>{ this.$i18n.locale = 'en'; },3500)
         setTimeout(()=>{ this.$i18n.locale = 'ru'; },9000)
     },
 
     methods: {
         doLogin1() {
-            this.$swal.loader("Вход в систему");
+            //this.$swal.loader("Вход в систему");
+            this.$store.commit("SHOW_LOADER", true);
             this.$store.dispatch("auth/login", this.auth).then(result => {
-                this.$swal.close();
+                this.$store.commit("SHOW_LOADER", false);
                 this.$swal.toast("Добро пожаловать: "+result.user.login);
                 this.$router.push("/");
             }).catch(e => {
-                this.$swal.close();
+                this.$store.commit("SHOW_LOADER", false);
                 this.message = e.message;
             });
         },
