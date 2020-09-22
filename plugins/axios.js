@@ -50,6 +50,10 @@ export default async ({ $axios, store, env, redirect, app }) => {
             store.commit("dev/ADD_ERROR", error);
         }
 
+        if (error.response.status == 401) {
+            redirect('/auth/login')
+        }
+
         return Promise.reject(error);
     });
 

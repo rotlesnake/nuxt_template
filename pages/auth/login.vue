@@ -20,6 +20,10 @@
 
 		<v-divider />
         <v-card-actions>
+            <v-btn icon @click="changeTheme()">
+                <v-icon>fa-cloud-sun</v-icon>
+            </v-btn>
+
             <v-spacer></v-spacer>
             <v-btn type="submit" color="primary" @click="doLogin1()" :loading="isLoading">
                 <v-icon left>vpn_key</v-icon>Войти
@@ -66,6 +70,11 @@ export default {
     },
 
     methods: {
+        changeTheme(){
+            this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+            this.$vuetify.theme.isDark = this.$vuetify.theme.dark;
+        },
+
         doLogin1() {
             //this.$swal.loader("Вход в систему");
             this.$store.commit("SHOW_LOADER", true);

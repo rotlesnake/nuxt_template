@@ -35,8 +35,8 @@ const vuetify = new Vuetify({
             warning: '#FFC107',
         },
         dark: {
-            toolbar: '#666',
-            primary: '#1976D2',
+            toolbar: '#525252',
+            primary: '#727272',
             secondary: '#424242',
             accent: '#82B1FF',
             error: '#FF5252',
