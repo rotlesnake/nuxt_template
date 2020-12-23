@@ -96,7 +96,7 @@ export default {
         reloadTable(){
             this.isLoading = true;
 
-            this.$api("table", this.tableName, "get/all/info", {}).then(response=>{
+            this.$rest("table", this.tableName, "get/all/info", {}).then(response=>{
                 this.isLoading = false;
                 this.pagination = response.pagination;
                 this.info = response.info;

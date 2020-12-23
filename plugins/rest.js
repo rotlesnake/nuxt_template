@@ -1,6 +1,6 @@
 export default (context, inject) => {
 
-    inject('api', async (module, controller, method, params) => {
+    inject('rest', async (module, controller, method, params) => {
         try {
             controller = controller || 'index';
             method = method || 'index';

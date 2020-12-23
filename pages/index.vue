@@ -75,7 +75,13 @@ export default {
     },  
     
     methods: {
-        showLoader(){
+        async showLoader(){
+            const users = this.$table('users');
+            //let user = await users.where('id',4).where('login','admin').get();
+            let user = await users.params('aaaa').where('id',3).where('password','admin').get();
+            console.log(user);
+            return;
+
             this.$store.commit("SHOW_LOADER", true);
             setTimeout(()=>{
                 this.$store.commit("SHOW_LOADER", false);

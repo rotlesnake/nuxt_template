@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant || $store.state.screenWidth<800" :mini-variant-width="50" :clipped="clipped" :mobile-breakpoint="600" fixed app>
 
         <v-list class="pa-0 elevation-2" v-if="!clipped" color="toolbar">
-            <v-list-item nuxt link to="/" exact>
+            <v-list-item nuxt link to="/" exact class="pa-0">
                 <v-list-item-content style="padding:7px;">
                     <v-img :src="require('@/assets/logo.png')" :height="50" :min-width="32" contain></v-img>
                 </v-list-item-content>
@@ -55,7 +55,7 @@
     </v-navigation-drawer>
 
     <v-footer app>
-        <span>&copy; {{ new Date().getFullYear() }}</span>
+        <span>&copy; {{ new Date().getFullYear() }} - {{appName}} </span>
     </v-footer>
 
     <!-- ДИАЛОГ ОЖИДАНИЯ ЗАГРУЗКИ !-->
@@ -74,6 +74,7 @@
 export default {
     data() {
         return {
+            appName: process.env.appName,
             clipped: false,
             drawer: true,
             items: [{

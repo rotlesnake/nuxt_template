@@ -6,7 +6,11 @@
 			"script": "dev",
 			"problemMatcher": [],
 			"label": "npm: dev",
-			"detail": "nuxt"
+			"detail": "nuxt",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
 		}
 	]
 }

@@ -25,10 +25,11 @@ export default {
 
   plugins: [
     "@/plugins/vuetify.js",
-    "@/plugins/api.js",
+    "@/plugins/rest.js",
     "@/plugins/swal.js",
     "@/plugins/axios.js",
     "@/plugins/i18n.js",
+    "@/plugins/table.js",
   ],
 
   components: true,
