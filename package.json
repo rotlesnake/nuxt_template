@@ -16,7 +16,7 @@
     "material-design-icons-iconfont": "^6.0.1",
     "nuxt": "^2.14.6",
     "sweetalert2": "^10.0.2",
-    "vue-api-query": "^1.8.2",
+    "vue-db-query": "^1.0.0",
     "vue-i18n": "^8.21.1",
     "vue-page-transition": "^0.2.2"
   },

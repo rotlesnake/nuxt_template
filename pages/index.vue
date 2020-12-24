@@ -76,10 +76,14 @@ export default {
     
     methods: {
         async showLoader(){
-            const users = this.$table('users');
-            //let user = await users.where('id',4).where('login','admin').get();
-            let user = await users.params('aaaa').where('id',3).where('password','admin').get();
-            console.log(user);
+            const users = this.$table('user_posts');
+            //let user = await users.modelInfo();
+            let user = users.new();
+            user.login = "1234";
+            user.password = "1234";
+            await user.save();
+//            let user = await users.find(3);
+            //await user.delete();
             return;
 
             this.$store.commit("SHOW_LOADER", true);
