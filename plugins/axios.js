@@ -15,18 +15,6 @@ export default async ({ $axios, store, env, redirect, app }) => {
 
     $axios.onResponse((response) => {
 
-        if (store.state.dev.isDev===true && response.status > 200 && response.status != 401 ) {
-            app.$swal.fire({
-              title: 'Ошибка',
-              text: response.data ,
-              icon: 'error',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            console.warn(response);
-            store.commit("dev/ADD_ERROR", response);
-        }
-
         if (response.status == 401) {
             redirect('/auth/login')
         }
@@ -37,18 +25,6 @@ export default async ({ $axios, store, env, redirect, app }) => {
 
 
     $axios.onError(error => {
-
-        if (store.state.dev.isDev===true && error.response.status != 401) {
-            app.$swal.fire({
-              title: 'Ошибка',
-              text: error,
-              icon: 'error',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            console.error(error);
-            store.commit("dev/ADD_ERROR", error);
-        }
 
         if (error.response.status == 401) {
             redirect('/auth/login')
