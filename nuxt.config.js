@@ -4,10 +4,13 @@ require('dotenv').config({ path: process.env.NODE_ENV === 'development' ? '.env.
 export default {
   loading: { color: '#fff' },
 
-  mode: 'spa',
+  ssr: false,
   target: 'server',
 
   head: {
+    htmlAttrs: {
+      lang: 'ru'
+    },
     titleTemplate: '%s - ' + process.env.appName,
     title: process.env.appName || '',
     meta: [
