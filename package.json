@@ -19,6 +19,7 @@
     "nuxt": "^2.15.8",
     "sweetalert2": "^10.16.9",
     "vue-page-transition": "^0.2.2",
+    "vue-excel-editor": "^1.5.17",
     "vuetify": "^2.6.3"
   },
   "devDependencies": {
