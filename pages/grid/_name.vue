@@ -1,29 +1,17 @@
 <template>
-    <section class="fancy-table" style="width: 100%; height: 100%">
-        <fancy-grid-vue ref="grid" :config="gridConfig" v-if="tableName && gridConfig.visible" style="padding: 5px 0 0 5px"></fancy-grid-vue>
-        <img v-else src="https://nabels.ru/upload/preload.gif" />
+    <section id="table-editor" style="width: 100%; height: 100%">
+        <div id="table" ref="table"></div>
+        <img v-if="!table" src="https://nabels.ru/upload/preload.gif" />
     </section>
 </template>
 
 <script>
-import FancyGridVue from "fancy-grid-vue";
-import Fancy from "fancygrid";
-import "fancygrid/client/modules/paging.min";
-import "fancygrid/client/modules/server-data.min";
-import "fancygrid/client/modules/sort.min";
-import "fancygrid/client/modules/grouping.min";
-import "fancygrid/client/modules/filter.min";
-import "fancygrid/client/modules/dom.min";
-import "fancygrid/client/modules/menu.min";
-import "fancygrid/client/modules/form.min";
-import "fancygrid/client/modules/grid.min";
-import "fancygrid/client/modules/i18n/ru";
-import "fancygrid/client/fancy.min.css";
+import {TabulatorFull as Tabulator} from 'tabulator-tables';
+import "tabulator-tables/dist/css/tabulator.min.css";
 
 export default {
     layout: "admin",
     components: {
-        FancyGridVue,
     },
     head() {
         return {
@@ -34,32 +22,9 @@ export default {
     data() {
         return {
             tableName: null,
+            table: null,
             columns: [],
             rows: [],
-
-            gridConfig: {
-                visible: false,
-                title: "Vue with FancyGrid",
-                theme: "gray",
-                width: 1200,
-                height: 500,
-                data: [],
-                resizable: true,
-                defaults: {
-                    type: "string",
-                    width: 100,
-                    sortable: true,
-                    editable: false,
-                    resizable: true,
-                    filter: {
-                        header: true,
-                        emptyText: "Поиск",
-                    },
-                },
-                selModel: "rows",
-                trackOver: true,
-                columns: [],
-            },
         };
     },
     mounted() {
@@ -79,23 +44,48 @@ export default {
                 this.showLoader(false);
                 this.columns = data.info.columns;
                 this.rows = data.rows;
-                this.gridConfig.title = data.info.name;
-                this.gridConfig.data = data.rows;
-                this.gridConfig.combos = {};
-                this.gridConfig.columns = await Promise.all(
+                this.initTable();
+            });
+        },
+        async initTable(){
+            const columns = await Promise.all(
                     Object.keys(this.columns).map(async (fldName) => {
-                        let editable = false;
-                        let type = "string";
-                        let width = this.columns[fldName].width || 150;
-                        let format = null;
-                        let hidden = this.columns[fldName].hidden || false;
-                        let cls = "";
+                        const fldParam = { field: fldName, title: this.columns[fldName].label };
+                        fldParam.editor = false;//!this.columns[fldName].protected;
+                        fldParam.sorter = "string";
+                        fldParam.width = this.columns[fldName].width || 150;
+                        fldParam.visible = this.columns[fldName].hidden ? false : true;
+                        fldParam.headerFilter = "input";
 
                         if (this.columns[fldName].type == "images") {
-                            cls = "image-cell";
-                            width = 80;
+                            fldParam.width = 80;
+                            fldParam.headerFilter = false;
+                            fldParam.formatter=(cell,params)=>{
+                                let itm = cell.getValue() ? cell.getValue()[0] : {};
+                                return "<a href='"+itm.src+"' target='_blank'>"+itm.name+"</a>";
+                                //return "<img src='"+itm+"' style='height:25px;'>";
+                            };
                         }
-
+                        if (this.columns[fldName].type == "files") {
+                            fldParam.width = 180;
+                            fldParam.headerFilter = false;
+                            fldParam.formatter=(cell,params)=>{
+                                let itm = cell.getValue() ? cell.getValue()[0] : {};
+                                return "<a href='"+itm.src+"' target='_blank'>"+itm.name+"</a>";
+                            };
+                        }
+                        if (this.columns[fldName].type == "integer") {
+                            fldParam.sorter = "number";
+                        }
+                        if (this.columns[fldName].type == "date" || this.columns[fldName].type == "dateTime") {
+                            //fldParam.sorter = "date";
+                            //fldParam.formatter = "datetime";
+                            //fldParam.formatterParams = {inputFormat:"yyyy-MM-dd HH:ss", outputFormat:"dd/MM/yy", invalidPlaceholder:"(invalid date)", timezone:"America/Los_Angeles"}
+                        }
+                        if (this.columns[fldName].type == "select") {
+                            fldParam.headerFilterParams = {values:this.columns[fldName].items, clearable:true };
+                        }
+/*
                         let render = (obj) => {
                             if (this.columns[fldName].type == "date" || this.columns[fldName].type == "dateTime") {
                                 obj.value = obj.data[fldName + "_text"];
@@ -113,24 +103,57 @@ export default {
                             }
                             return obj;
                         };
-                        return { type, index: fldName, title: this.columns[fldName].label, width, editable, format, hidden, render, cls };
+*/
+
+                        return fldParam;
                     })
                 );
-                //console.log(this.$el, this.$el.getBoundingClientRect());
-                this.gridConfig.width = this.$el.getBoundingClientRect().width - 10;
-                this.gridConfig.height = this.$el.getBoundingClientRect().height - 10;
-                this.gridConfig.visible = true;
-                //console.log(this.gridConfig);
+
+
+            const pageBound = this.$el.getBoundingClientRect();
+            this.table = new Tabulator("#table-editor #table", {
+                locale: true,
+                selectable: 1,
+                reactiveData:true,
+                filterMode:"remote",
+                sortMode:"remote",
+
+                ajaxURL: "https://",
+                ajaxRequesting: (url, params)=>{ return true; },
+                ajaxRequestFunc: async (url, config, params)=>{
+                    return await this.updateTable(params);
+                },
+                ajaxResponse: async (url, params, response)=>{
+                    return response;
+                },
+
+             	height: pageBound.height-10,
+             	data: this.rows,
+             	layout: "fitColumns", //fit columns to width of table (optional)
+             	columns
             });
+
+            this.table.on("rowClick", function(e, row){ 
+           	    console.log("Row " + row.getData().id, row);
+            });
+        },
+
+        async updateTable(params) {
+            console.log("updateTable",params);
+            params.filter.forEach(e=>{
+                e.oper = e.type;
+            });
+            const result = await this.$api("table", this.tableName, "get", params);
+            this.rows = result.rows;
+            return this.rows;
         },
     }, //methods
 };
 </script>
 
 <style>
-.image-cell .fancy-grid-cell-inner {
-    padding: 0;
-    margin: 0;
-    text-align: center;
+#table-editor #table {
+    margin: 5px;
 }
+.tabulator-header-filter input { background:#fff; border: 1px solid #ccc; border-radius: 3px; }
 </style>
