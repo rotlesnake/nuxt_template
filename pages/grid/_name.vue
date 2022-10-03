@@ -9,6 +9,30 @@
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
 
+const tableLangs = {
+    "ru-ru": {
+        "pagination":{
+            "page_size": "Записей на стр.", 
+            "page_title": "Записей на стр.",
+            "first": "|<<",
+            "first_title": "Первая страница",
+            "last": ">>|",
+            "last_title": "Последняя страница",
+            "prev": "<",
+            "prev_title": "Предыдущая страница",
+            "next": ">",
+            "next_title": "Следующая страница",
+            "all": "Все",
+            "counter":{
+                "showing": "Отображено",
+                "of": "из",
+                "rows": "записей",
+                "pages": "страниц",
+            }
+        },
+    }
+};
+
 export default {
     layout: "admin",
     components: {
@@ -24,6 +48,8 @@ export default {
             tableName: null,
             table: null,
             columns: [],
+            tableInfo: {},
+            tablePagination: {},
             rows: [],
         };
     },
@@ -40,8 +66,10 @@ export default {
         },
         async refresh() {
             this.showLoader(true);
-            this.$api("table", this.tableName, "get").then(async (data) => {
+            this.$api("table", this.tableName, "tableInfo").then(async (data) => {
                 this.showLoader(false);
+                this.tableInfo = data.info;
+                this.tablePagination = data.pagination;
                 this.columns = data.info.columns;
                 this.rows = data.rows;
                 this.initTable();
@@ -61,16 +89,18 @@ export default {
                             fldParam.width = 80;
                             fldParam.headerFilter = false;
                             fldParam.formatter=(cell,params)=>{
-                                let itm = cell.getValue() ? cell.getValue()[0] : {};
+                                let itm = cell.getValue();
+                                itm = itm && itm.length ? itm[0] : {};
                                 return "<a href='"+itm.src+"' target='_blank'>"+itm.name+"</a>";
-                                //return "<img src='"+itm+"' style='height:25px;'>";
+                                //return "<img src='"+itm.src+"' style='height:25px;'>";
                             };
                         }
                         if (this.columns[fldName].type == "files") {
                             fldParam.width = 180;
                             fldParam.headerFilter = false;
                             fldParam.formatter=(cell,params)=>{
-                                let itm = cell.getValue() ? cell.getValue()[0] : {};
+                                let itm = cell.getValue();
+                                itm = itm && itm.length ? itm[0] : {};
                                 return "<a href='"+itm.src+"' target='_blank'>"+itm.name+"</a>";
                             };
                         }
@@ -83,27 +113,20 @@ export default {
                             //fldParam.formatterParams = {inputFormat:"yyyy-MM-dd HH:ss", outputFormat:"dd/MM/yy", invalidPlaceholder:"(invalid date)", timezone:"America/Los_Angeles"}
                         }
                         if (this.columns[fldName].type == "select") {
-                            fldParam.headerFilterParams = {values:this.columns[fldName].items, clearable:true };
+                            fldParam.headerFilter = "list";
+                            fldParam.headerFilterParams = {values:{null:"- все -", ...this.columns[fldName].items}, clearable:true };
+                            fldParam.formatter=(cell,params)=>{
+                                return this.columns[fldName].items[cell.getValue()];
+                            };
                         }
-/*
-                        let render = (obj) => {
-                            if (this.columns[fldName].type == "date" || this.columns[fldName].type == "dateTime") {
-                                obj.value = obj.data[fldName + "_text"];
-                            }
-                            if (this.columns[fldName].type == "select") {
-                                obj.value = this.columns[fldName].items[obj.value];
-                            }
-                            if (this.columns[fldName].type == "linkTable") {
-                                obj.value = obj.data[fldName + "_text"];
-                            }
-                            if (this.columns[fldName].type == "images") {
-                                let itm = obj.data[fldName] ? obj.data[fldName][0] : null;
-                                obj.value = itm ? itm.src : "";
-                                if (obj.value) obj.value = "<img src='" + obj.value + "' style='height:31px;'>";
-                            }
-                            return obj;
-                        };
-*/
+                        if (this.columns[fldName].type == "linkTable") {
+                            fldParam.headerFilter = false;
+                            fldParam.formatter=(cell,params)=>{
+                                let fldName = cell._cell.column.field;
+                                let row = cell._cell.row.data;
+                                return row[fldName+"_text"];
+                            };
+                        }
 
                         return fldParam;
                     })
@@ -113,10 +136,22 @@ export default {
             const pageBound = this.$el.getBoundingClientRect();
             this.table = new Tabulator("#table-editor #table", {
                 locale: true,
+                langs: tableLangs,
                 selectable: 1,
                 reactiveData:true,
                 filterMode:"remote",
                 sortMode:"remote",
+
+                pagination:true,
+                paginationMode:"remote",
+                paginationCounter: "rows",
+                paginationSize: this.tableInfo.itemsPerPage,
+                paginationSizeSelector: this.tableInfo.itemsPerPageVariants,
+                paginationInitialPage: this.tablePagination.page,
+                paginationCounter: (pageSize, currentRow, currentPage, totalRows, totalPages)=>{
+                    let last_row = (currentRow+pageSize) <= totalRows ? (currentRow+pageSize) : totalRows;
+                    return "Отображено записей с "+currentRow+" по "+last_row+",  всего: " + totalRows + " ";
+                },
 
                 ajaxURL: "https://",
                 ajaxRequesting: (url, params)=>{ return true; },
@@ -128,7 +163,6 @@ export default {
                 },
 
              	height: pageBound.height-10,
-             	data: this.rows,
              	layout: "fitColumns", //fit columns to width of table (optional)
              	columns
             });
@@ -139,13 +173,18 @@ export default {
         },
 
         async updateTable(params) {
-            console.log("updateTable",params);
+            //console.log("updateTable",params);
             params.filter.forEach(e=>{
                 e.oper = e.type;
             });
+            params.filter = params.filter.filter(e=>e.value!=="null");
+            if (params.size) params.limit = params.size;
+
             const result = await this.$api("table", this.tableName, "get", params);
             this.rows = result.rows;
-            return this.rows;
+            let last_row = result.pagination.totalItems>=0 ? result.pagination.totalItems : this.rows.length;
+            let last_page = Math.ceil(last_row / result.pagination.itemsPerPage);
+            return {last_page, last_row, data: this.rows};
         },
     }, //methods
 };
