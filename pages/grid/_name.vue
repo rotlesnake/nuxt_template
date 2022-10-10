@@ -76,7 +76,7 @@ export default {
             });
         },
         async initTable(){
-            const columns = await Promise.all(
+            let columns = await Promise.all(
                     Object.keys(this.columns).map(async (fldName) => {
                         const fldParam = { field: fldName, title: this.columns[fldName].label };
                         fldParam.editor = false;//!this.columns[fldName].protected;
@@ -130,8 +130,14 @@ export default {
 
                         return fldParam;
                     })
-                );
+            );
 
+            if (this.tableInfo.groupColumns) {
+                columns = this.tableInfo.groupColumns.map(grp=>{
+                    grp.cols = columns.filter(e=>grp.columns.includes(e.field)); 
+                    return {title:grp.label, columns:grp.cols};
+                });
+            }
 
             const pageBound = this.$el.getBoundingClientRect();
             this.table = new Tabulator("#table-editor #table", {
