@@ -1,6 +1,11 @@
 <template>
-    <section id="table-editor" style="width: 100%; height: 100%">
+    <section id="table-editor">
         <div id="table" ref="table"></div>
+        <div ref="table-footer" style="width:350px;">
+            <v-btn fab x-small class="mr-2 white--text" color="green"><v-icon>add</v-icon></v-btn>
+            <v-btn fab x-small class="mr-2 white--text" color="indigo"><v-icon>edit</v-icon></v-btn>
+            <v-btn fab x-small class="mr-2 white--text" color="red" :disabled="!selectedRow"><v-icon>delete</v-icon></v-btn>
+        </div>
         <img v-if="!table" src="https://nabels.ru/upload/preload.gif" />
     </section>
 </template>
@@ -11,6 +16,10 @@ import "tabulator-tables/dist/css/tabulator.min.css";
 
 const tableLangs = {
     "ru-ru": {
+        "data":{
+            "loading": "Загрузка...",
+            "error": "Ошибка получения данных",
+        },
         "pagination":{
             "page_size": "Записей на стр.", 
             "page_title": "Записей на стр.",
@@ -51,6 +60,7 @@ export default {
             tableInfo: {},
             tablePagination: {},
             rows: [],
+            selectedRow: null,
         };
     },
     mounted() {
@@ -91,8 +101,8 @@ export default {
                             fldParam.formatter=(cell,params)=>{
                                 let itm = cell.getValue();
                                 itm = itm && itm.length ? itm[0] : {};
-                                return "<a href='"+itm.src+"' target='_blank'>"+itm.name+"</a>";
-                                //return "<img src='"+itm.src+"' style='height:25px;'>";
+                                //return "<a href='"+itm.src+"' target='_blank'>"+itm.name+"</a>";
+                                return "<img src='"+itm.src+"' style='height:25px;'>";
                             };
                         }
                         if (this.columns[fldName].type == "files") {
@@ -108,9 +118,11 @@ export default {
                             fldParam.sorter = "number";
                         }
                         if (this.columns[fldName].type == "date" || this.columns[fldName].type == "dateTime") {
-                            //fldParam.sorter = "date";
-                            //fldParam.formatter = "datetime";
-                            //fldParam.formatterParams = {inputFormat:"yyyy-MM-dd HH:ss", outputFormat:"dd/MM/yy", invalidPlaceholder:"(invalid date)", timezone:"America/Los_Angeles"}
+                            fldParam.formatter=(cell,params)=>{
+                                let fldName = cell._cell.column.field;
+                                let row = cell._cell.row.data;
+                                return row[fldName+"_text"];
+                            };
                         }
                         if (this.columns[fldName].type == "select") {
                             fldParam.headerFilter = "list";
@@ -168,14 +180,22 @@ export default {
                     return response;
                 },
 
-             	height: pageBound.height-10,
+             	height: pageBound.height-1,
              	layout: "fitColumns", //fit columns to width of table (optional)
+                footerElement:"<div class='table-footer-content'></div>",
              	columns
             });
 
-            this.table.on("rowClick", function(e, row){ 
-           	    console.log("Row " + row.getData().id, row);
+            this.table.on("rowClick", (e, row)=>{ 
+           	    //console.log("Row " + row.getData().id, row._row);
+           	    this.selectedRow = row._row.data;
+           	    this.canDelete = true;
             });
+
+            setTimeout(()=>{
+                let footerEl = document.querySelectorAll("#table .table-footer-content");
+                if (footerEl.length>0) footerEl[0].appendChild(this.$refs["table-footer"]);
+            }, 1);
         },
 
         async updateTable(params) {
@@ -197,8 +217,12 @@ export default {
 </script>
 
 <style>
+#table-editor {
+    width: 100%;
+    height: calc(100% - 10px);
+}
 #table-editor #table {
-    margin: 5px;
+    margin: 5px 5px 0 5px;
 }
 .tabulator-header-filter input { background:#fff; border: 1px solid #ccc; border-radius: 3px; }
 </style>
