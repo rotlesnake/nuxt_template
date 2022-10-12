@@ -93,6 +93,24 @@
                                 <v-list-item-title style="color: #77f">Редактор меню</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
+
+                        <v-divider v-if="$store.state.auth.user.role_id == 1" />
+                        <v-list-item v-if="$store.state.auth.user.role_id == 1" link to="/admin/app_acl">
+                            <v-list-item-icon>
+                                <v-icon>mdi-star-circle</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title style="color: #77f">APP acl</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="$store.state.auth.user.role_id == 1" link to="/admin/user_acl">
+                            <v-list-item-icon>
+                                <v-icon>mdi-star-circle</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title style="color: #77f">USER acl</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
                         <v-divider v-if="$store.state.auth.user.role_id == 1" />
 
                         <v-list-item link to="/auth/login">
