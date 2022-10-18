@@ -29,6 +29,7 @@ export default {
   plugins: [
     "@/plugins/vuetify.js",
     "@/plugins/api.js",
+    "@/plugins/acl.js",
     "@/plugins/swal.js",
     "@/plugins/axios.js",
     "@/plugins/element-ui.js",

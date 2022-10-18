@@ -18,7 +18,7 @@
     "material-design-icons-iconfont": "^6.6.0",
     "nuxt": "^2.15.8",
     "sweetalert2": "^10.16.9",
-    "tabulator-tables": "^5.3.4",
+    "tabulator-tables": "^5.4.2",
     "vue-excel-editor": "^1.5.17",
     "vue-page-transition": "^0.2.2",
     "vuetify": "^2.6.3"
