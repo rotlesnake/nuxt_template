@@ -9,9 +9,13 @@
         <v-dialog v-model="dialog" scrollable persistent max-width="990px">
             <v-card>
                 <v-card-title class="pa-0">
-                    <v-toolbar dense color="primary" elevation="0">
+                    <v-toolbar dense color="primary" elevation="0" dark>
                         <v-toolbar-title class="white--text mr-4">Назначенный функционал</v-toolbar-title>
                         <v-text-field v-model="search" label="Поиск..." dark dense flat solo-inverted hide-details clearable clear-icon="mdi-close-circle-outline"></v-text-field>
+                        <v-spacer></v-spacer>
+                        <div class="mt-1">
+                            <v-checkbox label="Исключить модели" v-model="exclude_tables" @click="doFilter()"></v-checkbox>
+                        </div>
                         <v-spacer></v-spacer>
                         <v-btn icon dark @click="dialog = false">
                             <v-icon>close</v-icon>
@@ -20,7 +24,7 @@
                 </v-card-title>
 
                 <v-card-text>
-                    <v-treeview v-model="selectedAcl" :items="appAclItems" :search="search" :open.sync="open" open-on-click dense selectable>
+                    <v-treeview v-model="selectedAcl" :items="curAclItems" :search="search" :open.sync="open" open-on-click dense selectable>
                         <template v-slot:label="{ item }">
                             <v-icon v-if="item.parent_id == 0">mdi-home</v-icon>
                             <v-icon v-if="item.parent_id > 0 && item.children && item.children.length > 0">mdi-folder</v-icon>
@@ -56,10 +60,12 @@ export default {
     data() {
         return {
             appAclItems: [],
+            curAclItems: [],
             open: [],
             selectedAcl: [],
             search: null,
             dialog: false,
+            exclude_tables: false,
         };
     },
 
@@ -97,10 +103,25 @@ export default {
             this.$api("table", "tree", "app_access_list", "get", {})
                 .then((response) => {
                     this.appAclItems = response.rows;
+                    this.curAclItems = JSON.parse(JSON.stringify(this.appAclItems));
                 })
                 .catch(() => {
                     this.showLoader(false);
                 });
+        },
+
+        doFilter() {
+            this.curAclItems = JSON.parse(JSON.stringify(this.appAclItems));
+            if (this.exclude_tables) {
+                const filterFunc = (e) => {
+                    let rez = true;
+                    if (e.name.substr(0, 6) == "Модель") rez = false;
+                    if (e.children) e.children = e.children.filter(filterFunc);
+                    return rez;
+                };
+                this.curAclItems = this.curAclItems.filter(filterFunc);
+                this.curAclItems = this.curAclItems.filter((e) => e.name.substr(0, 6) == "Модуль" && e.children && e.children.length > 0);
+            }
         },
 
         saveAcl() {
