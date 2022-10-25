@@ -48,7 +48,7 @@ export const mutations = {
 export const actions = {
     async login({ commit }, data) {
         try {
-            const result = await this.$api("auth", "login", "index", data);
+            const result = await this.$api("auth", "login", "index", "", data, { withoutToken: true });
             if (result.user) {
                 commit("SET_USER", result.user);
                 commit("SET_TOKEN", result.user.token);
