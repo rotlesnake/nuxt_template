@@ -3,7 +3,7 @@ export default async ({ $axios, store, env, redirect, app }) => {
     $axios.onRequest((request) => {
         request.headers.common['Content-Type'] = "application/json";
 
-        if (store.state.auth.token) {
+        if (store.state.auth.token && !request.withoutToken) {
             const token = store.state.auth.token;
             request.headers.common['Authorization'] = `Bearer ${token}`;
             request.headers.common['token'] = token;
