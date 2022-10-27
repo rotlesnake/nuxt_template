@@ -96,9 +96,9 @@ export const actions = {
 
     async logout({ commit }) {
         try {
+            await this.$api("auth", "logout", "index", {});
             commit("CLEAR_USER");
             commit("CLEAR_TOKEN");
-            await this.$api("auth", "logout", "index", {});
             this.$router.push("/auth/login");
         } catch (e) {
             throw e;
