@@ -32,5 +32,28 @@ export const mutations = {
 export const actions = {
 
 
+        downloadFile({ commit }, { path, postData, contentType, filename }) {
+            return this.$axios.post(path, postData, { responseType: "arraybuffer" }).then((response) => {
+                contentType = contentType || "application/octet-stream";
+                filename = filename || "download_file.xlsx";
+                const link = document.createElement("a");
+                link.href = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
+                link.setAttribute("download", filename);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                return response;
+            });
+        },
+
+        openFile({ commit }, { path, postData, contentType }) {
+            return this.$axios.post(path, postData, { responseType: "arraybuffer" }).then((response) => {
+                contentType = contentType || "application/pdf";
+                const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
+                window.open(url, "", "width=900,height=600");
+                return response;
+            });
+        }
+
 
 }//actions
