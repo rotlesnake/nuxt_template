@@ -2,9 +2,6 @@ import Vue from "vue";
 import Vuetify from "vuetify";
 import VuePageTransition from "vue-page-transition";
 import ru from "vuetify/lib/locale/ru";
-import "@mdi/font/css/materialdesignicons.css";
-import "material-design-icons-iconfont/dist/material-design-icons.css";
-import "@fortawesome/fontawesome-free/css/all.css";
 
 Vue.use(Vuetify);
 Vue.use(VuePageTransition);

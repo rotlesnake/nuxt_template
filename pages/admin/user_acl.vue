@@ -73,9 +73,7 @@ export default {
         this.$store.commit("SET_APP_TITLE", "USER ACL");
         if (this.$store.state.auth.user.role_id != 1) return;
 
-        setTimeout(() => {
-            this.loadAppAcl();
-        }, 3000);
+        this.loadAppAcl();
     },
 
     methods: {
@@ -83,8 +81,21 @@ export default {
             this.$store.commit("SHOW_LOADER", display);
         },
 
+        loadAppAcl() {
+            this.$api("table", "tree", "app_access_list", "get", {})
+                .then((response) => {
+                    this.appAclItems = response.rows;
+                    this.curAclItems = JSON.parse(JSON.stringify(this.appAclItems));
+                })
+                .catch(() => {
+                    this.showLoader(false);
+                });
+        },
+
         openDialogUserAcl() {
             if (this.$refs.table.selected.length == 0) return;
+            if (this.curAclItems.length == 0) return;
+
             this.dialog = true;
             this.selectedAcl = [];
             //console.log(this.$refs.table.selected);
@@ -93,17 +104,7 @@ export default {
                 .then((response) => {
                     this.showLoader(false);
                     this.selectedAcl = response.rows.map((e) => e.app_access_id);
-                })
-                .catch(() => {
-                    this.showLoader(false);
-                });
-        },
-
-        loadAppAcl() {
-            this.$api("table", "tree", "app_access_list", "get", {})
-                .then((response) => {
-                    this.appAclItems = response.rows;
-                    this.curAclItems = JSON.parse(JSON.stringify(this.appAclItems));
+                    this.$forceUpdate();
                 })
                 .catch(() => {
                     this.showLoader(false);

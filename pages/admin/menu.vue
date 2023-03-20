@@ -104,6 +104,12 @@
                             v-model="editDialog.item.roles"
                             :row="editDialog.item"
                         />
+                        <form-field
+                            :options="columns.app_access"
+                            name="app_access"
+                            v-model="editDialog.item.app_access"
+                            :row="editDialog.item"
+                        />
                     </div>
                     <div class="mt-4 d-flex jc-center">
                         <v-btn
@@ -163,6 +169,10 @@ export default {
                     this.columns = response.columns;
                     this.columns.roles.outlined = true;
                     this.columns.roles.name = "roles";
+                    this.columns.roles.dense = true;
+                    this.columns.app_access.outlined = true;
+                    this.columns.app_access.name = "app_access";
+                    this.columns.app_access.dense = true;
                 })
                 .catch(() => {
                     this.showLoader(false);
@@ -196,6 +206,7 @@ export default {
                 this.editDialog.item.roles = [];
                 this.editDialog.item.url = "";
                 this.editDialog.item.icon = "";
+                this.editDialog.item.app_access = [];
             }
             this.editDialog.active = true;
         },

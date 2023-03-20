@@ -1,10 +1,9 @@
 <template>
     <section class="ma-4" v-if="tableName">
         <tree-table-editor ref="table" :tableName="tableName" @dblSelect="$refs.table.openEditDialog('edit')">
-            <template #header>
-            </template>
+            <template #header> </template>
             <template #item="{ item }">
-                {{item.name}}
+                {{ item.name }}
             </template>
         </tree-table-editor>
     </section>

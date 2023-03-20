@@ -61,7 +61,11 @@ export default {
             tablePagination: {},
             rows: [],
             selectedRow: null,
+            string_dense: false,
         };
+    },
+    created() {
+        if (this.$route.query.dense) this.string_dense = true;
     },
     mounted() {
         this.$store.commit("SET_APP_TITLE", "Редактор таблиц");
@@ -95,6 +99,9 @@ export default {
                         fldParam.visible = this.columns[fldName].hidden ? false : true;
                         fldParam.headerFilter = "input";
 
+                        if (this.string_dense && (this.columns[fldName].type == "string" || this.columns[fldName].type == "text")) {
+                            fldParam.formatter = "textarea";
+                        }
                         if (this.columns[fldName].type == "images") {
                             fldParam.width = 80;
                             fldParam.headerFilter = false;

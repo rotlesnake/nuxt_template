@@ -1,8 +1,3 @@
-import Vue from "vue";
-import Swal from 'sweetalert2/dist/sweetalert2.all.min.js'
-import 'sweetalert2/dist/sweetalert2.min.css'
-
-
 export default (context, inject) => {
 
   Swal.toast = (title, icon, position, timeout) => {

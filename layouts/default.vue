@@ -9,18 +9,9 @@
                 </v-list-item>
             </v-list>
 
-            <v-treeview
-                class="left-menu"
-                v-model="menu_item"
-                :open="menu_opened"
-                :items="menu_items"
-                activatable
-                item-key="id"
-                open-on-click
-                @input="menuClick"
-            >
+            <v-treeview class="left-menu" v-model="menu_item" :open="menu_opened" :items="menu_items" activatable item-key="id" open-on-click @input="menuClick" exact>
                 <template v-slot:label="{ item, open }">
-                    <v-list-item class="pa-0" :to="item.url" nuxt>
+                    <v-list-item class="pa-0" :to="item.url" nuxt exact>
                         <v-icon left>
                             {{ item.icon }}
                         </v-icon>
@@ -34,96 +25,12 @@
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
             <v-divider vertical inset />
-            <v-toolbar-title class="ml-3" v-text="$store.state.appTitle" />
+
+            <!-- <v-toolbar-title class="ml-3" v-text="$store.state.appTitle" /> -->
             <v-spacer />
 
             <v-divider class="mx-1" inset vertical></v-divider>
-            <v-menu left bottom close-on-click>
-                <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on">
-                        <v-avatar v-if="$store.state.auth.user.photo && $store.state.auth.user.photo[0]" max-width="48" max-height="48">
-                            <img :src="$store.state.auth.user.photo[0].src" />
-                        </v-avatar>
-                        <v-icon v-else large>mdi-account-cowboy-hat</v-icon>
-                    </v-btn>
-                </template>
-
-                <v-card>
-                    <v-list dense>
-                        <v-list-item link to="/auth/profile">
-                            <v-list-item-icon>
-                                <v-icon>face</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title>Профиль</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-divider />
-                        <v-list-item @click="changeTheme()">
-                            <v-list-item-icon>
-                                <v-icon>fa-cloud-sun</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title>Тема (день/ночь)</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-divider />
-
-                        <v-list-item v-if="$store.state.auth.user.role_id == 1" link to="/table/users">
-                            <v-list-item-icon>
-                                <v-icon>mdi-star-circle</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title style="color: #77f">Пользователи системы</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item v-if="$store.state.auth.user.role_id == 1" link to="/table/roles">
-                            <v-list-item-icon>
-                                <v-icon>mdi-star-circle</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title style="color: #77f">Роли системы</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item v-if="$store.state.auth.user.role_id == 1" link to="/admin/menu">
-                            <v-list-item-icon>
-                                <v-icon>mdi-star-circle</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title style="color: #77f">Редактор меню</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-
-                        <v-divider v-if="$store.state.auth.user.role_id == 1" />
-                        <v-list-item v-if="$store.state.auth.user.role_id == 1" link to="/admin/app_acl">
-                            <v-list-item-icon>
-                                <v-icon>mdi-star-circle</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title style="color: #77f">APP acl</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item v-if="$store.state.auth.user.role_id == 1" link to="/admin/user_acl">
-                            <v-list-item-icon>
-                                <v-icon>mdi-star-circle</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title style="color: #77f">USER acl</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-divider v-if="$store.state.auth.user.role_id == 1" />
-
-                        <v-list-item link to="/auth/login">
-                            <v-list-item-icon>
-                                <v-icon>power_settings_new</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title>Выход</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list>
-                </v-card>
-            </v-menu>
+            <menu-profile />
         </v-app-bar>
 
         <v-main>
@@ -139,13 +46,18 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+
     </v-app>
 </template>
 
 <script>
 export default {
+    components: {
+        "menu-profile": () => import("./menuProfile.vue"),
+    },
     data() {
         return {
+            animal_id: -1,
             appName: process.env.appName,
             clipped: false,
             drawer: true,
