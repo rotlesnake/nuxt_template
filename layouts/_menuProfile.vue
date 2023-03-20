@@ -2,7 +2,7 @@
     <v-menu left bottom close-on-click>
         <template v-slot:activator="{ on }">
             <v-btn icon v-on="on">
-                <v-avatar v-if="$store.state.auth.user.photo.length > 0" width="40" height="40">
+                <v-avatar v-if="$store.state.auth.user.photo && $store.state.auth.user.photo.length" width="40" height="40">
                     <img :src="$store.state.auth.user.photo[0].src" />
                 </v-avatar>
                 <v-icon v-else>face</v-icon>

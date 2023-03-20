@@ -53,7 +53,7 @@
 <script>
 export default {
     components: {
-        "menu-profile": () => import("./menuProfile.vue"),
+        "menu-profile": () => import("./_menuProfile.vue"),
     },
     data() {
         return {

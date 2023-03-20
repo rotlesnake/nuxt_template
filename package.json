@@ -21,6 +21,7 @@
     "tabulator-tables": "^5.4.2",
     "vue-excel-editor": "^1.5.17",
     "vue-page-transition": "^0.2.2",
+    "vue-smooth-dnd": "^0.8.1",
     "vuetify": "^2.6.3"
   },
   "devDependencies": {
