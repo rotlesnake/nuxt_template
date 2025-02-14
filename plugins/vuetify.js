@@ -26,7 +26,7 @@ export default (ctx) => {
                 light: {
                     background: "#f6f7ff",
                     toolbar: "#fff",
-                    primary: "#5faf2d",
+                    primary: "#22aa99",
                     secondary: "#C0C0C0",
                     accent: "#82B1FF",
                     error: "#FF5252",

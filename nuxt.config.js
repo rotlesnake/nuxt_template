@@ -20,12 +20,12 @@ export default {
     ],
         link: [
             { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
-            { rel: "stylesheet", href: "https://idfarm.ru/JS_VENDORS/FONTS/mdi/materialdesignicons.min.css" },
-            { rel: "stylesheet", href: "https://idfarm.ru/JS_VENDORS/FONTS/material/material-design-icons.min.css" },
-            { rel: "stylesheet", href: "https://idfarm.ru/JS_VENDORS/FONTS/fa/all.min.css" },
-            { rel: "stylesheet", href: "https://idfarm.ru/JS_VENDORS/lib/swal/sweetalert2.min.css" },
+            { rel: "stylesheet", href: "/js/FONTS/mdi/materialdesignicons.min.css" },
+            { rel: "stylesheet", href: "/js/FONTS/material/material-design-icons.min.css" },
+            { rel: "stylesheet", href: "/js/FONTS/fa/all.min.css" },
+            { rel: "stylesheet", href: "/js/lib/swal/sweetalert2.min.css" },
         ],
-        script: [{ type: "text/javascript", src: "https://idfarm.ru/JS_VENDORS/lib/swal/sweetalert2.min.js" }],
+        script: [{ type: "text/javascript", src: "/js/lib/swal/sweetalert2.min.js" }],
   },
 
   css: [

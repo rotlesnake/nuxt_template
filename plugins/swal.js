@@ -1,3 +1,6 @@
+import Vue from "vue";
+
+
 export default (context, inject) => {
 
   Swal.toast = (title, icon, position, timeout) => {

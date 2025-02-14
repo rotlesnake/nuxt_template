@@ -1,6 +1,6 @@
 <template>
-    <section class="ma-2" v-if="tableName">
-        <table-editor ref="table" :tableName="tableName" @dblSelect="$refs.table.openEditDialog('edit')" :dense="isDense" :subHeight="-30"></table-editor>
+    <section class="ma-4" v-if="tableName">
+        <table-editor ref="table" :tableName="tableName" @dblSelect="$refs.table.openEditDialog('edit')"></table-editor>
     </section>
 </template>
 
@@ -18,13 +18,11 @@ export default {
     data() {
         return {
             tableName: null,
-            isDense: false,
         };
     },
-    created() {
+    mounted() {
         this.$store.commit("SET_APP_TITLE", "Редактор таблиц");
         this.tableName = this.$route.params.name;
-        this.isDense = this.$route.query.dense != undefined;
     },
     computed: {},
 
